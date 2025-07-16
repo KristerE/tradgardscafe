@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+
+<h1 class="title">Redigera din recension</h1>
+
+<form method="POST" action="/reviews/edit/<%= index %>" class="box">
+  <div class="field">
+    <label class="label">Text</label>
+    <div class="control">
+      <textarea class="textarea" name="message" required><%= review.message %></textarea>
+    </div>
+  </div>
+  <div class="control">
+    <button type="submit" class="button is-link">Spara ändringar</button>
+  </div>
+</form>
+
+<%- include('partials/footer') %>

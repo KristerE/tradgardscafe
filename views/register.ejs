@@ -1,0 +1,8 @@
+<%- include('partials/header') %>
+<h1 class="title">Skapa konto</h1>
+<form method="POST" action="/users/register" class="box">
+  <input name="username" class="input" placeholder="Användarnamn" required />
+  <input name="password" type="password" class="input mt-2" placeholder="Lösenord" required />
+  <button class="button is-primary mt-3">Registrera</button>
+</form>
+<%- include('partials/footer') %>

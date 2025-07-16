@@ -1,0 +1,8 @@
+<%- include('partials/header') %>
+<h1 class="title">Logga in</h1>
+<form method="POST" action="/users/login" class="box">
+  <input name="username" class="input" placeholder="Användarnamn" required />
+  <input name="password" type="password" class="input mt-2" placeholder="Lösenord" required />
+  <button class="button is-success mt-3">Logga in</button>
+</form>
+<%- include('partials/footer') %>

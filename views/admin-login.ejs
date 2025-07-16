@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+
+	<h1 class="title">Admin Inloggning</h1>
+	<form method="POST" action="/admin/login" class="box">
+		<div class="field">
+			<label class="label">Lösenord</label>
+			<div class="control">
+				<input type="password" name="password" class="input" required />
+			</div>
+		</div>
+		<div class="control">
+			<button type="submit" class="button is-dark">Logga in</button>
+		</div>
+	</form>
+
+	<%- include('partials/footer') %>
