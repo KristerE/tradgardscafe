@@ -1,0 +1,40 @@
+# 📦 Node modules
+node_modules/
+
+# ⚙️ Miljöfiler
+.env
+
+# 🐳 Docker artefakter
+*.log
+docker-compose.override.yml
+
+# 💾 OS-specifika filer
+.DS_Store
+Thumbs.db
+
+# 📂 Redigeringsprogram
+.vscode/
+.idea/
+
+# 📂 Uploads och tillfälliga filer
+public/uploads/*
+!public/uploads/.gitkeep
+
+# 🔧 npm-debug/loggar
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 🌐 Build/coverage om du kör tester
+coverage/
+dist/
+
+# 💻 PM2 eller annan process manager
+pids
+*.pid
+*.seed
+
+# 🔒 Private keys / credentials (om det finns)
+*.pem
+
+setup-structure.sh
