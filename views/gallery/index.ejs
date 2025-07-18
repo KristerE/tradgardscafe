@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Galleri</h1>
+    <div class="columns is-multiline">
+      <% images.forEach(image => { %>
+        <div class="column is-one-third">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image">
+                <img src="<%= image.url %>" alt="Bild">
+              </figure>
+            </div>
+            <% if (isAdmin) { %>
+              <form action="/gallery/delete/<%= image._id %>" method="POST" style="margin: 1rem;">
+                <button class="button is-danger is-small">Radera</button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -15,6 +15,7 @@ const indexRouter = require('./routes/index')
 const menuRouter = require('./routes/menu')
 const contactRouter = require('./routes/contact')
 const reviewsRouter = require('./routes/reviews')
+const galleryRoutes = require('./routes/gallery');
 
 const reviewSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -54,6 +55,8 @@ app.use('/contact', contactRouter)
 app.use('/reviews', reviewsRouter)
 app.use('/admin', adminRouter)
 app.use('/users', usersRouter);
+app.use('/gallery', galleryRoutes);
+
 
 app.listen(port, () => {
 	console.log(`🌿 Trädgårdscaféet körs på http://localhost:${port}`)

@@ -1,0 +1,25 @@
+<%- include('../partials/header') %>
+
+<section class="section">
+  <div class="container">
+    <h2 class="title">Ladda upp en bild</h2>
+    <form action="/gallery/upload" method="POST" enctype="multipart/form-data">
+      <div class="field">
+        <label class="label">Bild</label>
+        <div class="control">
+          <input type="file" name="image" class="input" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" name="show" checked> Visa i galleriet
+        </label>
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-primary">Ladda upp</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>
