@@ -1,0 +1,52 @@
+<%- include('partials/header') %>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Admin - Hantera bilder</h1>
+
+    <form action="/gallery/upload" method="POST" enctype="multipart/form-data" class="box">
+      <div class="field">
+        <label class="label">Bildfil</label>
+        <div class="control">
+          <input class="input" type="file" name="image" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Bildtext</label>
+        <div class="control">
+          <input class="input" type="text" name="caption" placeholder="Valfri text">
+        </div>
+      </div>
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" name="visible" checked>
+          Visa bilden i galleriet
+        </label>
+      </div>
+      <button class="button is-primary">Ladda upp</button>
+    </form>
+
+    <hr>
+
+    <div class="columns is-multiline">
+      <% images.forEach(image => { %>
+        <div class="column is-one-third">
+          <div class="box">
+            <figure class="image is-4by3">
+              <img src="<%= image.url %>" alt="">
+            </figure>
+            <p><strong><%= image.caption %></strong></p>
+            <form action="/gallery/delete/<%= image._id %>" method="POST" style="margin-top: 0.5rem;">
+              <button class="button is-danger is-small" onclick="return confirm('Ta bort bilden?')">Ta bort</button>
+            </form>
+            <form action="/gallery/toggle/<%= image._id %>" method="POST" style="margin-top: 0.5rem;">
+              <button class="button is-small"><%= image.visible ? 'Göm' : 'Visa' %></button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

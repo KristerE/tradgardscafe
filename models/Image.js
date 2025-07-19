@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 
 const imageSchema = new mongoose.Schema({
   url: String,
-  publicId: String,
-  show: { type: Boolean, default: true },
+  public_id: String,
+  caption: String,
+  visible: { type: Boolean, default: true },
   uploadedAt: { type: Date, default: Date.now }
 });
 

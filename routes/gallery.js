@@ -1,42 +1,58 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../config/multer');
-const cloudinary = require('../config/cloudinary');
 const Image = require('../models/Image');
+const cloudinary = require('../config/cloudinary');
 
-// Visa gallerisida
+// Middleware: kontrollera adminstatus
+function isAdmin(req, res, next) {
+  if (req.session.user && req.session.user.isAdmin) {
+    return next();
+  }
+  res.redirect('/login');
+}
+
+// Visa galleriet
 router.get('/', async (req, res) => {
-  const images = await Image.find({ show: true }).sort({ uploadedAt: -1 });
-  res.render('gallery/index', { images, isAdmin: req.session?.user?.isAdmin });
+  const images = await Image.find({ visible: true });
+  res.render('gallery', { images, user: req.session.user });
 });
 
-// Admin: uppladdningsformulär
-router.get('/upload', (req, res) => {
-  if (!req.session?.user?.isAdmin) return res.status(403).send('Endast admin');
-  res.render('gallery/upload');
+// Adminsida
+router.get('/admin', isAdmin, async (req, res) => {
+  const images = await Image.find();
+  res.render('gallery-admin', { images, user: req.session.user });
 });
 
-// Admin: ladda upp bild
-router.post('/upload', upload.single('image'), async (req, res) => {
-  const image = new Image({
+// Ladda upp bild
+router.post('/upload', isAdmin, upload.single('image'), async (req, res) => {
+  await Image.create({
     url: req.file.path,
-    publicId: req.file.filename,
-    show: req.body.show === 'on',
+    public_id: req.file.filename,
+    caption: req.body.caption,
+    visible: req.body.visible === 'on'
   });
-  await image.save();
-  res.redirect('/gallery');
+  res.redirect('/gallery/admin');
 });
 
-// Admin: ta bort bild
-router.post('/delete/:id', async (req, res) => {
-  if (!req.session?.user?.isAdmin) return res.status(403).send('Endast admin');
-
+// Ta bort bild
+router.post('/delete/:id', isAdmin, async (req, res) => {
   const image = await Image.findById(req.params.id);
   if (image) {
-    await cloudinary.uploader.destroy(image.publicId);
-    await image.deleteOne();
+    await cloudinary.uploader.destroy(image.public_id);
+    await Image.deleteOne({ _id: req.params.id });
   }
-  res.redirect('/gallery');
+  res.redirect('/gallery/admin');
+});
+
+// Ändra synlighet
+router.post('/toggle/:id', isAdmin, async (req, res) => {
+  const image = await Image.findById(req.params.id);
+  if (image) {
+    image.visible = !image.visible;
+    await image.save();
+  }
+  res.redirect('/gallery/admin');
 });
 
 module.exports = router;
