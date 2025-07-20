@@ -1,63 +1,77 @@
-const express = require('express')
-const session = require('express-session')
-const app = express()
-const port = 3000
+const express = require('express');
 const mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost:27017/tradgardscafe', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('✅ MongoDB ansluten'))
-  .catch((err) => console.error('❌ MongoDB fel:', err));
-
-
-const indexRouter = require('./routes/index')
-const menuRouter = require('./routes/menu')
-const contactRouter = require('./routes/contact')
-const reviewsRouter = require('./routes/reviews')
-const galleryRouter = require('./routes/gallery');
-
-const reviewSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  username: String,
-  message: String,
-  date: { type: Date, default: Date.now },
-  approved: { type: Boolean, default: false }
-});
-
-module.exports = mongoose.model('Review', reviewSchema);
-
-const adminRouter = require('./routes/admin')
-const { router: usersRouter, users } = require('./routes/users');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const dotenv = require('dotenv');
+const methodOverride = require('method-override');
+const path = require('path');
+const flash = require('connect-flash');
+const authRoutes = require('./routes/auth');
 
 
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-app.use(express.urlencoded({ extended: true }))
+// Ladda miljövariabler
+dotenv.config();
 
+const app = express();
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(methodOverride('_method'));
+app.use(flash());
+app.use('/auth', authRoutes);
+
+// Static och EJS
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+
+// MongoDB-anslutning
+mongoose
+  .connect(process.env.MONGO_URL || 'mongodb://localhost:27017/tradgardscafe')
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch((err) => console.error('❌ MongoDB error:', err));
+
+// Sessions
 app.use(
-	session({
-		secret: 'superhemligkod123',
-		resave: false,
-		saveUninitialized: false,
-	})
-)
+  session({
+    secret: process.env.SESSION_SECRET || 'hemligkod',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017/tradgardscafe',
+    }),
+    cookie: { maxAge: 1000 * 60 * 60 * 2 }, // 2 timmar
+  })
+);
 
+// Global variabel till vyer
 app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
+  res.locals.currentUser = req.session.user;
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
   next();
 });
 
-// Rutter
-app.use('/', indexRouter)
-app.use('/menu', menuRouter)
-app.use('/contact', contactRouter)
-app.use('/reviews', reviewsRouter)
-app.use('/admin', adminRouter)
-app.use('/users', usersRouter);
-app.use('/gallery', galleryRouter);
+// Routers
+const galleryRoutes = require('./routes/galleryRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const userRoutes = require('./routes/userRoutes');
 
+app.use('/', userRoutes);        // login, register, logout
+app.use('/gallery', galleryRoutes); // bilder (admin och visning)
+app.use('/reviews', reviewRoutes);  // recensioner (visa och admin)
 
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Trädgårdscafé' });
+});
+
+// Fallback för 404
+app.use((req, res) => {
+  res.status(404).render('404', { title: 'Sidan finns inte' });
+});
+
+// Starta server
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-	console.log(`🌿 Trädgårdscaféet körs på http://localhost:${port}`)
-})
+  console.log(`🚀 Servern körs på http://localhost:${port}`);
+});

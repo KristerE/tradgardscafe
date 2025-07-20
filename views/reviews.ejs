@@ -1,39 +1,40 @@
 <%- include('partials/header') %>
 
-<h1 class="title">📖 Recensioner</h1>
+<div class="container mt-4">
+  <h1 class="title">Recensioner</h1>
 
-<% if (user) { %>
-<form method="POST" action="/reviews" class="box">
-  <div class="field">
-    <label class="label">Din recension som <%= user.username %></label>
-    <div class="control">
-      <textarea class="textarea" name="message" required></textarea>
-    </div>
-  </div>
-  <div class="control">
-    <button type="submit" class="button is-success">Skicka</button>
-  </div>
-</form>
-<% } else { %>
-  <p><a href="/users/login">Logga in</a> för att skriva en recension.</p>
-<% } %>
+  <% if (user) { %>
+    <form action="/reviews" method="POST" class="box">
+      <div class="field">
+        <label class="label">Namn</label>
+        <div class="control">
+          <input class="input" type="text" name="name" value="<%= user.username %>" readonly>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Kommentar</label>
+        <div class="control">
+          <textarea class="textarea" name="comment" required></textarea>
+        </div>
+      </div>
+      <button type="submit" class="button is-link">Skicka</button>
+    </form>
+  <% } else { %>
+    <p><a href="/login">Logga in</a> för att skriva en recension.</p>
+  <% } %>
 
-<hr>
-
-<h2 class="subtitle">Tidigare recensioner:</h2>
-
-<% if (reviews.length === 0) { %>
-  <p>Inga recensioner än.</p>
-<% } else { %>
-  <% reviews.slice().reverse().forEach(r => { %>
+  <% reviews.forEach(review => { %>
     <div class="box">
-      <strong><%= r.name %></strong> (<%= r.date %>)<br/>
-      <p><%= r.message %></p>
-			<% if (user && user.username === r.name) { %>
-  <a href="/reviews/edit/<%= reviews.length - 1 - i %>" class="button is-small is-warning">Redigera</a>
-<% } %>
+      <p><strong><%= review.name %></strong>:</p>
+      <p><%= review.comment %></p>
+
+      <% if (user && user.isAdmin) { %>
+        <form action="/reviews/delete/<%= review._id %>" method="POST" class="mt-2">
+          <button class="button is-small is-danger">Ta bort</button>
+        </form>
+      <% } %>
     </div>
   <% }) %>
-<% } %>
+</div>
 
 <%- include('partials/footer') %>

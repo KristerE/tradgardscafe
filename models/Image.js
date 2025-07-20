@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 const imageSchema = new mongoose.Schema({
   url: String,
   public_id: String,
-  caption: String,
-  visible: { type: Boolean, default: true },
-  uploadedAt: { type: Date, default: Date.now }
-});
+  title: String,
+  show: { type: Boolean, default: true }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Image', imageSchema);
+module.exports = mongoose.models.Image || mongoose.model('Image', imageSchema);

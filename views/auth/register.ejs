@@ -1,9 +1,9 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 
 <div class="container mt-5" style="max-width: 400px;">
   <h1 class="title">Registrera</h1>
 
-  <% if (error) { %>
+  <% if (typeof error !== 'undefined') { %>
     <div class="notification is-danger"><%= error %></div>
   <% } %>
 
@@ -23,16 +23,11 @@
     </div>
 
     <div class="field">
-      <label class="checkbox">
-        <input type="checkbox" name="isAdmin">
-        Registrera som admin
-      </label>
-    </div>
-
-    <div class="field">
       <button class="button is-success is-fullwidth">Registrera</button>
     </div>
   </form>
+
+  <p>Har du redan konto? <a href="/auth/login">Logga in här</a>.</p>
 </div>
 
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

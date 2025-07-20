@@ -1,8 +1,33 @@
 <%- include('partials/header') %>
-<h1 class="title">Logga in</h1>
-<form method="POST" action="/users/login" class="box">
-  <input name="username" class="input" placeholder="Användarnamn" required />
-  <input name="password" type="password" class="input mt-2" placeholder="Lösenord" required />
-  <button class="button is-success mt-3">Logga in</button>
-</form>
+
+<div class="container mt-5" style="max-width: 400px;">
+  <h1 class="title">Logga in</h1>
+
+  <% if (error) { %>
+    <div class="notification is-danger"><%= error %></div>
+  <% } %>
+
+  <form action="/auth/login" method="POST" class="box">
+    <div class="field">
+      <label class="label">Användarnamn</label>
+      <div class="control">
+        <input class="input" type="text" name="username" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Lösenord</label>
+      <div class="control">
+        <input class="input" type="password" name="password" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <button class="button is-link is-fullwidth">Logga in</button>
+    </div>
+  </form>
+
+  <p>Har du inget konto? <a href="/auth/register">Registrera dig här</a>.</p>
+</div>
+
 <%- include('partials/footer') %>

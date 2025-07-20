@@ -1,34 +1,19 @@
 <%- include('partials/header') %>
-	<h1 class="title">🛠 Adminpanel</h1>
 
-	<% if (reviews.length===0) { %>
-		<p>Inga recensioner ännu.</p>
-		<% } else { %>
-			<ul>
-				<% reviews.forEach((r, index)=> { %>
-					<li class="box">
-						<strong>
-							<%= r.name %>
-						</strong> (<%= r.date %>)<br>
-							<p>
-								<%= r.message %>
-							</p>
-							<p>Status:
-								<% if (r.approved) { %>
-									✅ Godkänd
-									<% } else { %>
-										⏳ Väntar
-										<form method="POST" action="/admin/approve/<%= index %>" style="display:inline;">
-											<button class="button is-small is-success">Godkänn</button>
-										</form>
-										<% } %>
-							</p>
-							<form method="POST" action="/admin/delete/<%= index %>">
-								<button class="button is-small is-danger">Ta bort</button>
-							</form>
-					</li>
-					<% }) %>
-			</ul>
-			<% } %>
+<div class="container mt-5">
+  <h1 class="title">Adminpanel</h1>
 
-				<%- include('partials/footer') %>
+  <div class="notification is-info">
+    Du är inloggad som admin. Här kan du hantera användare, bilder och recensioner.
+  </div>
+
+  <div class="buttons">
+    <a href="/gallery" class="button is-link">Hantera bilder</a>
+    <a href="/reviews" class="button is-primary">Hantera recensioner</a>
+  </div>
+
+  <h2 class="subtitle mt-5">Användare (placeholder)</h2>
+  <p>Här kan du visa och hantera användare om du vill bygga det.</p>
+</div>
+
+<%- include('partials/footer') %>

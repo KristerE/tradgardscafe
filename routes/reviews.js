@@ -1,34 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const reviewController = require('../controllers/reviewController');
 
-// Visa redigeringsformulär
-router.get('/edit/:index', (req, res) => {
-	const { index } = req.params
-	const review = reviews[index]
+// Visa alla recensioner
+router.get('/', reviewController.getReviews);
 
-	if (!req.session.user) return res.send('Du måste vara inloggad.')
-	if (!review || review.name !== req.session.user.username) {
-		return res.send('Du har inte behörighet att redigera detta.')
-	}
+// Skapa ny recension
+router.post('/', reviewController.postReview);
 
-	res.render('edit-review', { review, index })
-})
+// Redigera recension
+router.post('/edit/:id', reviewController.editReview);
 
-// Hantera uppdatering
-router.post('/edit/:index', (req, res) => {
-	const { index } = req.params
-	const { message } = req.body
-	const review = reviews[index]
+// Ta bort recension
+router.post('/delete/:id', reviewController.deleteReview);
 
-	if (!req.session.user || !review || review.name !== req.session.user.username) {
-		return res.send('Otillåten åtgärd.')
-	}
-
-	review.message = message
-	review.approved = false // Måste godkännas igen
-	review.date = new Date().toLocaleDateString()
-
-	res.redirect('/reviews')
-})
-
-module.exports = router
+module.exports = router;

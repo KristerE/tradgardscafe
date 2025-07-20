@@ -1,25 +1,50 @@
 <%- include('partials/header') %>
 
-<section class="section">
-  <div class="container">
-    <h1 class="title">Bildgalleri</h1>
-    <div class="columns is-multiline">
-      <% images.forEach(image => { %>
+<div class="container mt-4">
+  <h1 class="title">Bildgalleri</h1>
+
+  <% if (user && user.isAdmin) { %>
+    <form action="/gallery/upload" method="POST" enctype="multipart/form-data" class="box">
+      <div class="field">
+        <label class="label">Ladda upp bild</label>
+        <div class="control">
+          <input type="file" name="image" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" name="show" checked>
+          Visa bilden i galleriet
+        </label>
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-primary">Ladda upp</button>
+      </div>
+    </form>
+  <% } %>
+
+  <div class="columns is-multiline mt-4">
+    <% images.forEach(image => { %>
+      <% if (image.show || (user && user.isAdmin)) { %>
         <div class="column is-one-third">
           <div class="card">
             <div class="card-image">
               <figure class="image is-4by3">
-                <img src="<%= image.url %>" alt="<%= image.caption %>">
+                <img src="<%= image.url %>" alt="Bild">
               </figure>
             </div>
-            <div class="card-content">
-              <p><%= image.caption %></p>
-            </div>
+            <% if (user && user.isAdmin) { %>
+              <div class="card-footer">
+                <form action="/gallery/delete/<%= image._id %>" method="POST" class="card-footer-item">
+                  <button class="button is-danger is-small">Ta bort</button>
+                </form>
+              </div>
+            <% } %>
           </div>
         </div>
-      <% }) %>
-    </div>
+      <% } %>
+    <% }); %>
   </div>
-</section>
+</div>
 
 <%- include('partials/footer') %>

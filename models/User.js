@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
-  passwordHash: String,
-  isAdmin: { type: Boolean, default: false }
+  username: String,
+  password: String,
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  }
 });
 
-module.exports = mongoose.model('User', userSchema);
+// Skydda modellen mot att överskrivas
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

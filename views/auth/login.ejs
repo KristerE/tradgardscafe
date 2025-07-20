@@ -1,13 +1,13 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 
 <div class="container mt-5" style="max-width: 400px;">
-  <h1 class="title">Registrera</h1>
+  <h1 class="title">Logga in</h1>
 
-  <% if (error) { %>
+  <% if (typeof error !== 'undefined') { %>
     <div class="notification is-danger"><%= error %></div>
   <% } %>
 
-  <form action="/auth/register" method="POST" class="box">
+  <form action="/auth/login" method="POST" class="box">
     <div class="field">
       <label class="label">Användarnamn</label>
       <div class="control">
@@ -23,16 +23,11 @@
     </div>
 
     <div class="field">
-      <label class="checkbox">
-        <input type="checkbox" name="isAdmin">
-        Registrera som admin
-      </label>
-    </div>
-
-    <div class="field">
-      <button class="button is-success is-fullwidth">Registrera</button>
+      <button class="button is-link is-fullwidth">Logga in</button>
     </div>
   </form>
+
+  <p>Har du inget konto? <a href="/auth/register">Registrera dig här</a>.</p>
 </div>
 
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>
