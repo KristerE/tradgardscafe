@@ -7,6 +7,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'tradgardscafe',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    transformation: [{ width: 1200, height: 800, crop: 'limit' }],
   },
 });
 
